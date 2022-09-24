@@ -14,7 +14,9 @@ class AvaliablePortsPage extends StatelessWidget {
       body: BlocBuilder<AvaliablePortsPageBloc, AvaliablePortsPageState>(
           builder: (context, state) {
         final ports = state.avaliablePorts.map(
-          (e) => Text(e),
+          (portName) => PortCard(
+            portName: portName,
+          ),
         );
         return Wrap(
           children: ports.toList(),
@@ -25,9 +27,42 @@ class AvaliablePortsPage extends StatelessWidget {
 }
 
 class PortCard extends StatelessWidget {
+  const PortCard({super.key, required this.portName});
+
+  final String portName;
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    final _theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: SizedBox(
+          width: 150,
+          height: 150,
+          child: Column(
+            children: [
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(width: 2, color: Colors.white)),
+                child: const Icon(
+                  Icons.usb,
+                  size: 40,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                portName,
+                style: _theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
+              ),
+              const Spacer(),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
