@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_serial_console/logic/bloc/avaliable_ports_page_bloc.dart';
+import 'package:universal_serial_console/utilities/routes/route_args.dart';
 
 class AvaliablePortsPage extends StatelessWidget {
   const AvaliablePortsPage({super.key});
@@ -38,7 +39,12 @@ class PortCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Card(
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              '/portInformation',
+              arguments: PortInformationPageArgs(portName: portName),
+            );
+          },
           child: SizedBox(
             width: 150,
             height: 150,
