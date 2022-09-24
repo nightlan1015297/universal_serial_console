@@ -21,5 +21,8 @@ class AvaliablePortsPageState extends Equatable {
       );
 
   @override
-  List<Object?> get props => [status, avaliablePorts];
+  List<Object?> get props => [
+        status,
+        avaliablePorts,
+      ];
 }
