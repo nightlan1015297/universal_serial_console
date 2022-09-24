@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:universal_serial_console/logic/bloc/avaliable_ports_page_bloc.dart';
+import 'package:universal_serial_console/utilities/routes/app_router.dart';
 
 import 'ui/avaliable_ports_page/AvaliablePortsPage.dart';
 
@@ -27,6 +28,7 @@ class UniversalSerialConsole extends StatelessWidget {
       child: MaterialApp(
         title: 'Universal serial console',
         theme: ThemeData.dark(),
+        onGenerateRoute: AppRouter().generateRoute,
         home: const AvaliablePortsPage(),
       ),
     );
