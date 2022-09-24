@@ -37,29 +37,32 @@ class PortCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        child: SizedBox(
-          width: 150,
-          height: 150,
-          child: Column(
-            children: [
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(width: 2, color: Colors.white)),
-                child: const Icon(
-                  Icons.usb,
-                  size: 40,
+        child: InkWell(
+          onTap: () {},
+          child: SizedBox(
+            width: 150,
+            height: 150,
+            child: Column(
+              children: [
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(width: 2, color: Colors.white)),
+                  child: const Icon(
+                    Icons.usb,
+                    size: 40,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                portName,
-                style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
-              ),
-              const Spacer(),
-            ],
+                const Spacer(),
+                Text(
+                  portName,
+                  style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
+                ),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
