@@ -26,9 +26,7 @@ class UniversalSerialConsole extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Universal serial console',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: ThemeData.dark(),
         home: const AvaliablePortsPage(),
       ),
     );
