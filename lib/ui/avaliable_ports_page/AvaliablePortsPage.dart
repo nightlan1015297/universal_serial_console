@@ -33,7 +33,7 @@ class PortCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -56,7 +56,7 @@ class PortCard extends StatelessWidget {
               const Spacer(),
               Text(
                 portName,
-                style: _theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
+                style: theme.textTheme.bodyLarge!.copyWith(fontSize: 18),
               ),
               const Spacer(),
             ],
