@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:universal_serial_console/ui/avaliable_ports_page/AvaliablePortsPage.dart';
 import 'package:universal_serial_console/ui/page_routes/popup_page_route.dart';
+import 'package:universal_serial_console/ui/port_information_page/PortConfigPage.dart';
 import 'package:universal_serial_console/ui/port_information_page/PortInformationPage.dart';
 import 'package:universal_serial_console/utilities/routes/route_args.dart';
 
@@ -12,7 +13,16 @@ class AppRouter {
           settings: RouteSettings(name: routsettings.name),
           builder: (contex) => const AvaliablePortsPage(),
         );
-
+      case '/portConfig':
+        return PopupPageRoute(
+          settings: RouteSettings(name: routsettings.name),
+          builder: (contex) {
+            final args = routsettings.arguments as PortConfigArgs;
+            return PortConfigPage(
+              portName: args.portName,
+            );
+          },
+        );
       case '/portInformation':
         return PopupPageRoute(
           settings: RouteSettings(name: routsettings.name),
