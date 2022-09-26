@@ -54,7 +54,7 @@ class TextInformationProvider extends StatelessWidget {
                 child: Text(information,
                     maxLines: informationMaxLines,
                     overflow: informationTextOverFlow,
-                    style: informationTexttheme ?? theme.textTheme.headline6),
+                    style: informationTexttheme ?? theme.textTheme.bodyLarge),
               ),
       ],
     );
