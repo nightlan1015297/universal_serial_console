@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:universal_serial_console/logic/bloc/port_information_page_bloc.dart';
+import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:universal_serial_console/ui/common_widget/text_information_provider.dart';
+import 'package:universal_serial_console/ui/port_information_page/PortConfigEditor.dart';
+import 'package:universal_serial_console/utilities/routes/route_args.dart';
 
 class PortInformationPage extends StatelessWidget {
   const PortInformationPage({super.key, required this.portName});
@@ -10,29 +11,17 @@ class PortInformationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        final portInformationPageBloc =
-            PortInformationPageBloc(portName: portName);
-        portInformationPageBloc.add(const InitializeRequest());
-        return portInformationPageBloc;
-      },
-      child: BlocBuilder<PortInformationPageBloc, PortInformationPageState>(
-        builder: (context, state) {
-          final mediaQuery = MediaQuery.of(context);
-          final width = mediaQuery.size.width;
-          if (width > 600) {
-            return PortInformationDesktopView(
-              portName: portName,
-            );
-          } else {
-            return PortInformationMobileView(
-              portName: portName,
-            );
-          }
-        },
-      ),
-    );
+    final mediaQuery = MediaQuery.of(context);
+    final width = mediaQuery.size.width;
+    if (width > 600) {
+      return PortInformationDesktopView(
+        portName: portName,
+      );
+    } else {
+      return PortInformationMobileView(
+        portName: portName,
+      );
+    }
   }
 }
 
@@ -44,59 +33,64 @@ class PortInformationDesktopView extends StatelessWidget {
   final String portName;
   @override
   Widget build(BuildContext context) {
+    final portInstance = SerialPort(portName);
+
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 400),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
-          child: BlocBuilder<PortInformationPageBloc, PortInformationPageState>(
-            builder: (context, state) {
-              return Card(
-                child: Row(children: [
-                  Flexible(
-                    flex: 8,
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: double.infinity),
-                            TextInformationProvider(
-                              label: 'Port name',
-                              information: portName,
-                            ),
-                            const Divider(),
-                            TextInformationProvider(
-                              label: 'Address',
-                              information: state.address.toString(),
-                            ),
-                            const Divider(),
-                            TextInformationProvider(
-                              label: 'Bus number',
-                              information: state.busNum.toString(),
-                            )
-                          ],
-                        ),
+          child: Card(
+            child: Row(children: [
+              Flexible(
+                flex: 5,
+                child: SizedBox(
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: double.infinity,
+                          ),
+                          TextInformationProvider(
+                            label: 'Port name',
+                            information: portName,
+                          ),
+                          const Divider(),
+                          TextInformationProvider(
+                            label: 'Description',
+                            information: portInstance.description ?? '-',
+                          ),
+                          const Divider(),
+                          TextInformationProvider(
+                            label: 'Manufacturer',
+                            information: portInstance.manufacturer ?? '-',
+                          ),
+                          const Divider(),
+                          TextInformationProvider(
+                            label: 'Address',
+                            information: portInstance.address.toString(),
+                          ),
+                          const Divider(),
+                          TextInformationProvider(
+                            label: 'Bus number',
+                            information: portInstance.busNumber.toString(),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                  Flexible(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        const SizedBox(width: double.infinity),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Apply'),
-                        )
-                      ],
-                    ),
-                  ),
-                ]),
-              );
-            },
+                ),
+              ),
+              Flexible(
+                flex: 5,
+                child: PortConfigEditForm(portInstance: portInstance),
+              ),
+            ]),
           ),
         ),
       ),
@@ -111,56 +105,70 @@ class PortInformationMobileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final portInstance = SerialPort(portName);
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
+        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 400),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: BlocBuilder<PortInformationPageBloc, PortInformationPageState>(
-            builder: (context, state) {
-              return Card(
-                child: Column(children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              width: double.infinity,
-                            ),
-                            TextInformationProvider(
-                              label: 'Port name',
-                              information: portName,
-                            ),
-                            const Divider(),
-                            TextInformationProvider(
-                              label: 'Address',
-                              information: state.address.toString(),
-                            ),
-                            const Divider(),
-                            TextInformationProvider(
-                              label: 'Bus number',
-                              information: state.busNum.toString(),
-                            )
-                          ],
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20.0),
+          child: Card(
+            child: Column(children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          width: double.infinity,
                         ),
-                      ),
+                        TextInformationProvider(
+                          label: 'Port name',
+                          information: portName,
+                        ),
+                        const Divider(),
+                        TextInformationProvider(
+                          label: 'Description',
+                          information: portInstance.description ?? '-',
+                        ),
+                        const Divider(),
+                        TextInformationProvider(
+                          label: 'Manufacturer',
+                          information: portInstance.manufacturer ?? '-',
+                        ),
+                        const Divider(),
+                        TextInformationProvider(
+                          label: 'Address',
+                          information: portInstance.address.toString(),
+                        ),
+                        const Divider(),
+                        TextInformationProvider(
+                          label: 'Bus number',
+                          information: portInstance.busNumber.toString(),
+                        )
+                      ],
                     ),
                   ),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text("Apply"),
-                      )
-                    ],
-                  ),
-                ]),
-              );
-            },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/portConfig',
+                            arguments: PortConfigArgs(portName: portName));
+                      },
+                      child: const Text("Connect to this port"),
+                    ),
+                  )
+                ],
+              ),
+            ]),
           ),
         ),
       ),
